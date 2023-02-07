@@ -1,12 +1,15 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
-const inputEl = document.querySelector('datetime-picker');
+const inputEl = document.getElementById('datetime-picker');
 const btnStartEl = document.querySelector('[data-start]');
 const dayEl = document.querySelector('[data-days]');
 const hoursEl = document.querySelector('[data-hours]');
 const minuteEl = document.querySelector('[data-minutes]');
-const secondEl = document.querySelector('[data-seconds');
+const secondEl = document.querySelector('[data-seconds]');
+
 btnStartEl.addEventListener('click', onTimerStart);
+let intervalId = null;
+
 const options = {
   enableTime: true,
   time_24hr: true,
@@ -18,14 +21,45 @@ const options = {
 };
 flatpickr(inputEl, options);
 
-function onTimerStart() {}
+function onTimerStart() {
+  const chosenDate = new Date(inputEl.value).getTime();
+  intervalId = setInterval(() => {
+    const difference = chosenDate - Date.now();
+    if (difference < 1000) {
+      clearInterval(intervalId);
+      return;
+    }
+    const data = convertMs(difference);
+    onTimerTime(data);
+  }, 1000);
+
+  console.log(chosenDate);
+}
+
+function onTimerTime({
+  days = '00',
+  hours = '00',
+  minutes = '00',
+  seconds = '00',
+} = {}) {
+  dayEl.textContent = addLeadingZero(days);
+  hoursEl.textContent = addLeadingZero(hours);
+  minuteEl.textContent = addLeadingZero(minutes);
+  secondEl.textContent = addLeadingZero(seconds);
+}
 
 function onPassedDates(selectedDates) {
   const result = selectedDates < Date.now();
   btnStartEl.disabled = result;
   if (result) {
     alert('Please choose a date in the future');
+    clearInterval(intervalId);
+    onTimerTime();
   }
+}
+
+function addLeadingZero(value) {
+  return value.toString().padStart(2, '0');
 }
 
 function convertMs(ms) {
@@ -34,7 +68,6 @@ function convertMs(ms) {
   const minute = second * 60;
   const hour = minute * 60;
   const day = hour * 24;
-
   // Remaining days
   const days = Math.floor(ms / day);
   // Remaining hours

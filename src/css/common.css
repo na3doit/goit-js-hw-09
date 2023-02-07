@@ -16,3 +16,28 @@ img {
   display: block;
   max-width: 100%;
 }
+.input-thumb {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 10px;
+}
+
+.timer {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.value {
+  display: flex;
+  justify-content: center;
+  font-size: 25px;
+  font-weight: 500;
+}
+
+.label {
+  color: rgb(5, 56, 27);
+  font-size: 18px;
+  text-transform: uppercase;
+  text-decoration-line: overline;
+}

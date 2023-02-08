@@ -33,8 +33,6 @@ function onTimerStart() {
     const data = convertMs(difference);
     onTimerTime(data);
   }, 1000);
-
-  console.log(chosenDate);
 }
 
 function onTimerTime({
